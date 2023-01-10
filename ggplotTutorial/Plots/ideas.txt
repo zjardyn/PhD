@@ -1,0 +1,7 @@
+geom_density plots showing after_stat 
+get lab to do poll then make a piechart out of it
+pantheria data set to show transformations
+simulate a bacterial growth curve?
+show different boxplots
+show line plots grouping samples
+

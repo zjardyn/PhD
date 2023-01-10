@@ -1,0 +1,87 @@
+All plots are composed of data, the info you want to visualize, and a mapping, the description of the data's variables mapped to aesthetic attributes. There are five mapping components:
+
+The grammar of graphics answers the question of what is a statistical graphic. Thegrammar tells us that a graphic maps the data to aesthetics (colour, size, shape) of geometric objects (points,lines, bars). The plot may also contain statistical transformations of the data and info about the plot's coordinate system. Facetting can be used to plot subsets of the data. The combination of these independent components is what makes up our graphic.
+
+A layer is a collection of geometric elements and statistical transformations. Geoms represent what you see in the plot: points, lines, polygons, etc. Stats summarise the data: binning and counting observations to create a histogram, or fitting a linear model. 
+
+Scales map values in the data space to values in the aesthetic space, using colour, shape, or size. Scales also draw the legend and axes, which make it possible to read the original data values from the plot (inverse mapping). 
+
+A coord (or coordinate system) describes how data coordinates are mapped to the plane of the graphic, and provides axes and gridlines to help read the graph. Normally the Cartesian coordinate system is used, but there is also the polar coordinates. 
+
+A facet specifies how to break up and display subsets of data as small multiples. This is also known as conditioning or latticing/trellising. 
+
+A theme controls the finer points of the display, like font size and background colour. Tufte: Envisoning Information.The GG does not tell you which graphics to use. It only describes static plots. 
+
+Base Graphics were written by Ross Ihaka, with a pen and paper model: you can only draw on top of the plot, you cannot modify or delete existing content. There is no representation of the graphics, apart from their appearance on the screen. Base graphics are generally fast, but have limited scope. Show some base graphics. 
+
+ggplot2 makes it easy to describe a wide range of graphics with compact syntax, and independent components make extension easy.Users should have R, RStudio, and access to R packages
+
+Built in documentation is incredibly helpful.
+Stackoverflow is good but you need a minimal reproducible to get help. GGplot has a good cheatsheet.
+Every ggplot2 plot has three components:
+1. data
+2. A set of aesthetic mapping between variables in the data and visual properties.
+3. At least one layer which describes how to render each observation. Layers are usually created with the geom function.
+
+data: mpg 
+aesthetic mapping: engine size mapped to x position, fuel economy to y position. 
+layer: points 
+
+structure: data and aesthetic mappings are supplied in ggplot(), then layers are added on with +
+
+almost every plot maps x and y so we can forgo these. Each command is put on a newline  
+
+we can add additonal variables to a plot within aes(), such as colour, shape, and size
+
+ggplot2 takes care of converting data into aesthetics with a scale, there is one scale for each aesthetic mapping in a plot. The scale is responsible for creating a guide, axis and legend that allows you to read the plot and convert aesthetic values back into data values.
+You can also set an aesthetic to a fixed value, but it has to be outside of aes() 
+Colour and shape work well with categorical values, size works well with continous values.
+When using aesthetics, less is more, too many can lead to overplotting
+geom_smooth fits a smoother to data with standard error
+geom_boxplot produces a box-and-whisker plot
+geom_histogram and geom_freqpoly shows the distribution of a set of points, geom_density
+geom_bar shows the distribution of categorical variables
+geom_path and geom_line draw lines between the data points, lines go left to right, paths are not constrained
+
+boxplots summarise the bulk distribution with only five numbers, jittered plots show every point but generally only work well for small datasets
+
+violin plots gives the richest detail but rely on the calculation of a density estimate which can be difficult to interpret. also sensitive to small datasets. 
+
+hist and poly work in the same way: they bin the data, then count the observations in each bin, they provie more informaton about a single variables distribution at the cost of needing more space. You can control the binwidth to increase or decrease resolution, it is good practice to experiment with binwidths. an alternative is geom_density, but the underlying computations are more complex, they also assume that the distribution is continuous, unbounded, and smooth
+
+
+you can compare distributions by mapping a categorical variable to fill(geom_hist) or colour(geom_freqpoly)
+the discrete analogue of the histogram is the bar chart, geom_bar
+bar charts can be confusing to make:
+some expect unsummarized data, where each observation contributes one unit to the height of each bar. others use presummarised data
+time series use time as the x axis
+overplotting can be fixed with alpha
+xlab and ylab can be used to customize axis lables ans ggtiltle can give your plot an informative title. if you dont want lables you can use NULL
+
+you can use xlim and ylim to modify the axis limits. use NA to set only one limit which sets values outside of the limit to NA
+you can assign plots to objects with the <- operator. you can then save it with ggsave. ?ggsave if you are curious about individual geomes, read the documentation. 
+
+there are three purposes to a layer: display data (gross structure, local structure, outliers), display a statistical summary of the data, add additional metadata(context, annotations, references)
+
+geoms can be divided into individual and collective: individual draws a distinct graphical object for each observation (row) geom_point. A collective geom displays multiple observations with one geometric object, which may be the result of a statistical summary, like a boxplot, or may be required to display the geom, like a polygon. Lines and paths fall inbetween. each line is composed of a set of straight segments, where each segment represents two points. How do we control the assignment of observations to graphical elements? the group aesthetic is mapped to the interaction of all discrete variables in a plot. sometimes you need to explicitly define the grouping structure by mapping group to a variable that has a different value for each group.
+
+if you try to map the fill aesthetic to a continuous variable won't work. The default grouping is based on the class variable, so each bar is associated with multiple colours (depending on the value of the continuous variable for the observations in each class) Because the bar can only display one colour, ggplot2 reverts to grey. We need to override the grouping. 
+
+# Statistical summaries
+reveal uncertainty: 
+- discrete x, range: geome_errorbar, geom_linerange
+- discrete x, range and center: geom_crossbar, geom_pointrangre
+- continuous x, range: geome_ribbon
+- continuous x, range and center: geome_smooth
+
+you can change binwidth, specify number of bins, or specify the exact location of breaks, also play with range of x-axis
+geom_density places a normal distribution at each point and sums up all the curves. The area of each density estimate is standardized to one so you lose info about the relative size of each group.
+
+Non-categorical variables can be broken up in boxplots using group = cut_width()
+best way to display 1d continuous distribution is geom_histogram. if you want to compare distribution between groups, use facet_wrap(~var), geom_freqpoly, or geom_histogram(position=fill)
+
+geom_violin() is a compact version of the density plot
+to deal with overplotting you can use tweaks to the aesthetics. Make the points smaller, use hollow glyphs or make the points transparent. a denominator gives the number of points that must be overplotted to give a solid colour. if the data is discrete you can use geom_jitter() to alleviate some overlap
+
+it is often necessary to add annotations to the data displayed. an annotation supplies metadata to the plot
+the labs() helper function lets you do this, specifying name-value pairs, you can also specify mathematical expressions with quote(). you can also remove labels by setting them to NULL. geom_text will add text to x, y positions. labelling well as two challenges: text does not affect the limits of the plot, you will need to tweak xlim and ylim. if you want to label many points, its hard to avoid overlap. check_overlap = true is useful but offers little control over what points are removed. 

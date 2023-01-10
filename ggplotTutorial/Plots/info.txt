@@ -1,0 +1,65 @@
+ggplot is based on the grammer of graphics. other concepts include: data import, manipulation, and R programming in general. it is based on the grammer of graphics book from 1999 by Leland Wilkinson, its a theoretical deconstruction data graphics. ggplot2 is an implementation of this, written by Hadley Wickham. data plotting used to be descrete functions to make different plots, gg sets out to generalize this to by decomposing graphics into its constituents: data, mapping, stats, scales, geometries, facets, coordinates, and themes. these can be used to describe any type of plot. api may not support this. 
+
+Data: data is the foundation of data viz. tidy data. there is too much to talk about here, getting it in, manipulating it. this variable is x, y, colour, size, etc.  
+
+mapping: aesthetic mapping: link variables in data to graphical properties in the geometry. facet mapping: link variables in the data to panels in the facet layout. assigning data mapping into different views.  
+
+Stats: data may be in tidy format, but may not be in the format we want to display. bar chart is counts, precalculated or not, we apply transformations to the data to be plotted. summary statistics for a boxplot. it has to precalculate these values to plot them. implicit in many plot types, but can be done prior to plotting. what is going on behind the scenes.  
+
+Scales: data does not directly represent graphical properties, displaying points as different shapes. scales translate back and forth between variable ranges and property ranges. categories -> colour, numbers -> position. how we describe continuous versus discrete data.  sclaes implies there are differences between data.
+
+geometries: interpret aesthetics as graphical interpretations, takes the scales and mappings that may have been transformed by the statistics and interprets them in a specific way. points, lines, polygones, a bar plot, a bubble plot. they are building blocks to make more complicated plots, like a boxplot. plots are not limited to single geometries, can be layered.
+
+facets: you have a plotting area and you can split your data into multiples, allows you to declutter data, panel layout can carry meaning
+
+coordinates:  variables are mapped, scaled, transformed, and applied to a geometry. But the coordinate system is what defines the position values. the physical mapping on the paper, onto the fabric that you are plotting things into. cartesian system with x, y axis. could be radial as well, if you are into cartography. projection of the coordinate system.  
+
+theme: overall visual look of the plot, font, colour of gridline, simple is better. 
+
+but I just wanted to make pie chart....
+
+now time for ggplot
+
+ggplot is an implementation of the grammer of graphics. 
+
+ggplot call defining the data we will be using
+mapping defined with aes(), x, y, colour, size, specifying columns in the dataset. add layers with the + 
+mapping can be defined in the geom, or globally, which is inherited by all layers, or specific to a certain layer
+do not need to refer to arguments, bad practice but more consice
+mapping can also be expressions! legend takes the name from our mapping
+can also just set the colour instead of mapping it its outside of aesth and thus has no mapping the legend wouldnt mean anything. 
+if you want to take something from the data, put it in aes, otherwise it it outside of this
+different geomtries have different mapping requirements 
+?geom_histogram go to aesthetics
+plot is not confined to a single layer
+order of + matters
+only had to use, gemetirs, mapping data, others had sensible defualts 
+
+stats: linked to geomtries, every geom has a default stat, a layer can be created with a call to sta_*() or geom_*() but geom more common
+
+color vs fill
+
+i wnat to add some bars versus i want to calculate some counts and visulize with bars, geomtries come first and statistics are happeneing in the backgorund, out of sight out of mind, sensible defaults
+
+bar counting by class
+uses stat_count and 
+sometimes we have precomputed data: use identity = stat
+or use geom_col() shortcut
+values calculated by the stat is inside after_stat within aes()
+manually calculate y 
+many stats provide different values which you can access
+how do you know which stats are calculated
+?stat_density and computed variables
+its okay to be a little freaked out by this, its just a preplotting transformation
+geoms have default stats, geoms have default stats, both can be overridden 
+scales: everthing insdie aes() has a scale, scale_<aes>_<type>()
+type can be generic, cont, disc, binned, or specific: area, for scaling size to circle area
+
+based on vector type of class, (num, fac) a discrete scale is picked
+map a discrete colour scheme to discrete data
+x and y are transformed with scales
+
+facets are fantastic: split data into multiple panels, should not be used to combind seperate plots, two facets provided 
+best way to avoid overplotting
+facet cwrap takes a column, map the class varable to column
+facet grid takes two variables, the intersection
