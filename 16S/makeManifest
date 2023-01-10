@@ -1,0 +1,7 @@
+BEGIN {
+DIR="/home/zhood/16S/firstrun/reads/" 
+print "sample-id\tforward-absolute-filepath\treverse-absolute-filepath"
+}
+{FS="_L001"; OFS=""; if(NR%2==0){print $1, "\t", DIR, $0, "\t", DIR, $0}}
+
+
