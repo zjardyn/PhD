@@ -2,11 +2,19 @@ library(qiime2R)
 library(tidyverse)
 library(reshape2)
 
-taxa_prop_table <- function(table = "soil-table.qza", taxonomy ="taxonomy.qza", taxa = "Genus"){
-    # metadata<-read_q2metadata("meta-data.txt")
-    SVs <-read_qza(table)$data
-    taxonomy <-read_qza(taxonomy)$data %>% parse_taxonomy()
-    taxasums <-summarize_taxa(SVs, taxonomy)$Species
+taxa_sums <- function(table, taxonomy) {
+  SVs <-read_qza(table)$data
+  taxonomy <-read_qza(taxonomy)$data %>% parse_taxonomy()
+  taxasums <-summarize_taxa(SVs, taxonomy)$Species
+  taxasums
+}
+
+taxa_prop_table <- function(taxasums, taxa = "Genus"){
+   # 
+   # # metadata<-read_q2metadata("meta-data.txt")
+   #  SVs <-read_qza(table)$data
+   #  taxonomy <-read_qza(taxonomy)$data %>% parse_taxonomy()
+   #  taxasums <-summarize_taxa(SVs, taxonomy)$Species
     
     # rownames are concatenated taxa, pull out then make it a column
     taxasums <- as_tibble(rownames_to_column(taxasums, var = "taxon"))

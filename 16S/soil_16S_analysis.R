@@ -4,10 +4,37 @@ library(glue)
 
 source("C:/Users/Zjardyn/Desktop/PhD/16S/16S_functions.R")
 
-soil_tbl <- "C:/Users/Zjardyn/Desktop/soil_out/soil-table.qza"
-soil_tx <- "C:/Users/Zjardyn/Desktop/soil_out/taxonomy.qza"
+all_tbl <- "C:/Users/Zjardyn/Desktop/full_out/full-merged-table.qza"
+all_tx <- "C:/Users/Zjardyn/Desktop/full_out/full-merged-taxonomy.qza"
+all_sums <- taxa_sums(table = all_tbl, taxonomy = all_tx)
 
-soil_tab <- taxa_prop_table(table = soil_tbl, taxonomy = soil_tx, taxa = "Genus")
+all_tab <- taxa_prop_table(taxasums = all_sums, taxa = "Genus")
+all_tab_f <- filter_prop_table(all_tab, threshold = 2)
+all_tbm <- as_tibble(melt(as.matrix(all_tab_f)))
+
+smp_filt = rownames(all_tab)[!rownames(all_tab) == 'C']
+# smp_filt <- c("A1.1", "A2.3" , "A3.3" , "A4.2")
+
+all_tbm_f <- filter_samples(smp_filt = smp_filt, table = all_tab_f, table_melt = all_tbm)
+
+new_cols <- lrg_colors(smp = ncol(all_tab_f), seed = 1)
+
+# # removes 0s from value
+# all_tbm_f[all_tbm_f$value == 0,] <- NA
+# all_tbm_f <- all_tbm_f[complete.cases(all_tbm_f),]
+
+all_tbm_f %>%
+  # droplevels() %>%
+  ggplot(aes(fill=Var2, y=value, x=Var1)) + 
+  geom_bar(position="fill", stat="identity") + 
+  theme(axis.text.x= element_text(angle = 90, hjust = 1)) +
+  scale_fill_manual(values = new_cols)
+
+# test to see if its working properly
+
+
+soil_sums <- taxa_sums(table = soil_tbl, taxonomy = soil_tx)
+soil_tab <- taxa_prop_table(taxasums = soil_sums, taxa = "Genus")
 soil_tab_f <- filter_prop_table(soil_tab, threshold = 2)
 soil_tbm <- as_tibble(melt(as.matrix(soil_tab_f)))
 
@@ -16,7 +43,18 @@ smp_filt <- c("A1.1", "A2.3" , "A3.3" , "A4.2")
 soil_tbm_f <- filter_samples(smp_filt = smp_filt, table = soil_tab, table_melt = soil_tbm)
 
 
-cols <- lrg_colors(smp = ncol(soil_tab_f), seed = 1)
+# cols <- lrg_colors(smp = ncol(soil_tab_f), seed = 1)
+
+
+# removes 0s from value
+soil_tbm_f[soil_tbm_f$value == 0,] <- NA
+soil_tbm_f <- soil_tbm_f[complete.cases(soil_tbm_f),]
+
+soil_tbm_f %>%
+  ggplot(aes(fill=Var2, y=value, x=Var1)) + 
+  geom_bar(position="fill", stat="identity") + 
+  theme(axis.text.x= element_text(angle = 90, hjust = 1)) +
+  scale_fill_manual(values = new_cols)
 
 soil_tbm_f %>%
     mutate(Var1 = str_replace_all(Var1, "A1.1", "One")) %>%
@@ -52,11 +90,12 @@ enrichment_tx <- "C:/Users/Zjardyn/Desktop/enrichment_out/enrichment-taxonomy.qz
 new_tbl <- "C:/Users/Zjardyn/Desktop/new_out/table.qza"
 new_tx <- "C:/Users/Zjardyn/Desktop/new_out/taxonomy.qza"
 
-new_tab <- taxa_prop_table(table = new_tbl, taxonomy = new_tx, threshold = 0.5, taxa = "Genus")
-new_tbm <- as_tibble(melt(as.matrix(new_tab)))
-new_tbm_f <- filter_smp(smp_filt = rownames(new_tab), table = new_tab, table_melt = new_tbm)
+new_tab <- taxa_prop_table(table = new_tbl, taxonomy = new_tx, taxa = "Genus")
+new_tab_f <- filter_prop_table(new_tab, threshold = 2)
+new_tbm <- as_tibble(melt(as.matrix(new_tab_f)))
+new_tbm_f <- filter_samples(smp_filt = rownames(new_tab), table = new_tab, table_melt = new_tbm)
 
-new_cols <- lrg_colors(smp = ncol(new_tab), seed = 2)
+new_cols <- lrg_colors(smp = ncol(new_tab_f), seed = 2)
 
 new_tbm_f %>%
   ggplot(aes(fill=Var2, y=value, x=Var1)) + 
