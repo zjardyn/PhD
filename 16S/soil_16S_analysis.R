@@ -15,23 +15,16 @@ all_tbm <- as_tibble(melt(as.matrix(all_tab_f)))
 smp_filt = rownames(all_tab)[!rownames(all_tab) == 'C']
 # smp_filt <- c("A1.1", "A2.3" , "A3.3" , "A4.2")
 
+
 all_tbm_f <- filter_samples(smp_filt = smp_filt, table = all_tab_f, table_melt = all_tbm)
 
 new_cols <- lrg_colors(smp = ncol(all_tab_f), seed = 1)
 
-# # removes 0s from value
-# all_tbm_f[all_tbm_f$value == 0,] <- NA
-# all_tbm_f <- all_tbm_f[complete.cases(all_tbm_f),]
-
 all_tbm_f %>%
-  # droplevels() %>%
   ggplot(aes(fill=Var2, y=value, x=Var1)) + 
   geom_bar(position="fill", stat="identity") + 
   theme(axis.text.x= element_text(angle = 90, hjust = 1)) +
   scale_fill_manual(values = new_cols)
-
-# test to see if its working properly
-
 
 soil_sums <- taxa_sums(table = soil_tbl, taxonomy = soil_tx)
 soil_tab <- taxa_prop_table(taxasums = soil_sums, taxa = "Genus")
@@ -43,12 +36,7 @@ smp_filt <- c("A1.1", "A2.3" , "A3.3" , "A4.2")
 soil_tbm_f <- filter_samples(smp_filt = smp_filt, table = soil_tab, table_melt = soil_tbm)
 
 
-# cols <- lrg_colors(smp = ncol(soil_tab_f), seed = 1)
-
-
-# removes 0s from value
-soil_tbm_f[soil_tbm_f$value == 0,] <- NA
-soil_tbm_f <- soil_tbm_f[complete.cases(soil_tbm_f),]
+cols <- lrg_colors(smp = ncol(soil_tab_f), seed = 1)
 
 soil_tbm_f %>%
   ggplot(aes(fill=Var2, y=value, x=Var1)) + 

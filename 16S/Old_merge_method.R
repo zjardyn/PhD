@@ -33,3 +33,11 @@ most_sums <- full_join(soil_sums_v, enrichment_sums_v, by = "taxa") %>%
 all_sums <-full_join(most_sums, new_sums_v, by = "taxa") %>%
   mutate_all(~replace(., is.na(.), 0)) %>%
   column_to_rownames(var = "taxa")
+
+# # removes 0s from value
+# all_tbm_f[all_tbm_f$value == 0,] <- NA
+# all_tbm_f <- all_tbm_f[complete.cases(all_tbm_f),]
+
+# removes 0s from value
+# soil_tbm_f[soil_tbm_f$value == 0,] <- NA
+# soil_tbm_f <- soil_tbm_f[complete.cases(soil_tbm_f),]
