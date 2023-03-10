@@ -3,11 +3,12 @@ library(RColorBrewer)
 library(glue)
 library(tidyr)
 # load my functions
-source("C:/Users/Zjardyn/Desktop/PhD/16S/16S_functions.R")
+# source("C:/Users/Zjardyn/Desktop/PhD/16S/16S_functions.R")
+source("C:/Users/zjard/Desktop/PhD/16S/16S_functions.R")
 
 # ---- Loading Data ----
-all_tbl <- "C:/Users/Zjardyn/Desktop/full_out/full-merged-table.qza"
-all_tx <- "C:/Users/Zjardyn/Desktop/full_out/full-merged-taxonomy.qza"
+all_tbl <- "C:/Users/zjard/Desktop/full_out/full-merged-table.qza"
+all_tx <- "C:/Users/zjard/Desktop/full_out/full-merged-taxonomy.qza"
 all_sums <- taxa_sums(table = all_tbl, taxonomy = all_tx)
 all_tab <- taxa_prop_table(taxasums = all_sums, taxa = "Genus")
 
@@ -129,13 +130,13 @@ soils_tbm <- as_tibble(melt(as.matrix(soils_tab_thresh)))
 
 soils_tbm <- arrange_taxa(soils_tab_thresh, soils_tbm)
 
-split_func <- function(x, by) {
-  r <- diff(range(x))
-  out <- seq(0, r - by - 1, by = by)
-  c(round(min(x) + c(0, out - 0.51 + (max(x) - max(out)) / 2), 0), max(x))
-}
-idx <- split_func(1:length(all_cols_blind_hex), 10)
-new_cols <- all_cols_blind_hex[idx]
+# split_func <- function(x, by) {
+#   r <- diff(range(x))
+#   out <- seq(0, r - by - 1, by = by)
+#   c(round(min(x) + c(0, out - 0.51 + (max(x) - max(out)) / 2), 0), max(x))
+# }
+# idx <- split_func(1:length(all_cols_blind_hex), 10)
+# new_cols <- all_cols_blind_hex[idx]
 
 library(viridis)
 all_cols_blind <- viridis::viridis.map %>%
@@ -185,18 +186,65 @@ enrich_tbm <- arrange_taxa(enrich_tab_thresh, enrich_tbm)
 enrich_tbm_v <- enrich_tbm %>% 
   separate_wider_delim(Var1, delim = "_", names = c("Treatment", "Soil", "Date"))
 
-num_col2 <- enrich_tbm %>%
-  summarise(orgs = unique(Var2)) %>%
-  nrow()
-set.seed(6)
-new_cols2 <- sample(all_cols_blind_hex, num_col2)
-new_cols2[1] <- "#808080"
+### Hexadecane ###
 
-enrich_tbm_v %>%
+enrich_hex <- enrich_tbm_v %>%
+    filter(Treatment == "Hex") %>%
+    filter(value != 0.0)
+
+enrich_hex <- droplevels(enrich_hex)
+
+enrich_tab_hex <- enrich_tab_thresh %>%
+    rownames_to_column(var = "smp") %>%
+    filter(str_detect(smp, "Hex")) %>%
+    column_to_rownames(var = "smp") 
+
+enrich_hex <- arrange_taxa(enrich_tab_hex, enrich_hex)
+
+num_col_hex <- enrich_hex %>%
+    summarise(orgs = unique(Var2)) %>%
+    nrow()
+
+set.seed(4)
+
+new_cols_hex <- sample(all_cols_blind_hex, num_col2)
+new_cols_hex[1] <- "#808080"
+    
+enrich_hex %>%
+    ggplot(aes(fill=Var2, y=value, x=Date)) + 
+    geom_bar(position="fill", stat="identity") + 
+    theme(axis.text.x= element_text(angle = 90, hjust = 1)) + 
+    scale_fill_manual(values = new_cols_hex) +
+    facet_grid(Treatment~Soil) 
+### Styrene ###
+
+enrich_sty <- enrich_tbm_v %>%
+    filter(Treatment == "Sty") %>%
+    filter(value != 0.0) 
+
+enrich_sty <- droplevels(enrich_sty)
+
+enrich_tab_sty <- enrich_tab_thresh %>%
+    rownames_to_column(var = "smp") %>%
+    filter(str_detect(smp, "Sty")) %>%
+    column_to_rownames(var = "smp")
+
+enrich_sty <- arrange_taxa(enrich_tab_sty, enrich_sty)
+
+num_col_sty <- enrich_sty %>%
+    summarise(orgs = unique(Var2)) %>%
+    nrow()
+
+set.seed(3)
+
+new_cols_sty <- sample(all_cols_blind_hex, num_col2)
+new_cols_sty[1] <- "#808080"
+
+enrich_sty %>%
   ggplot(aes(fill=Var2, y=value, x=Date)) + 
   geom_bar(position="fill", stat="identity") + 
   theme(axis.text.x= element_text(angle = 90, hjust = 1)) + 
-  scale_fill_manual(values = new_cols2) +
+  scale_fill_manual(values = new_cols_sty) +
   facet_grid(Treatment~Soil) 
 
 # ---- DTE ---- 
