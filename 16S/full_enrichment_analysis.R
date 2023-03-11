@@ -1,7 +1,6 @@
 library(ggthemes)
 library(RColorBrewer)
 library(glue)
-library(tidyr)
 # load my functions
 # source("C:/Users/Zjardyn/Desktop/PhD/16S/16S_functions.R")
 source("C:/Users/zjard/Desktop/PhD/16S/16S_functions.R")
@@ -16,45 +15,45 @@ all_tab <- taxa_prop_table(taxasums = all_sums, taxa = "Genus")
 all_tab <- all_tab %>%
   rownames_to_column(var = "smp") %>%
   # Soil June07
-  mutate(smp =  str_replace_all(smp, "^A1\\.1", glue("Soil_1_1_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A1\\.2", glue("Soil_1_2_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A1\\.3", glue("Soil_1_3_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A1\\.4", glue("Soil_1_4_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A1\\.1", glue("Soil.1_1_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A1\\.2", glue("Soil.1_2_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A1\\.3", glue("Soil.1_3_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A1\\.4", glue("Soil.1_4_{lubridate::ymd(20220607)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^A2\\.1", glue("Soil_2_1_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A2\\.2", glue("Soil_2_2_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A2\\.3", glue("Soil_2_3_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A2\\.4", glue("Soil_2_4_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A2\\.1", glue("Soil.2_1_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A2\\.2", glue("Soil.2_2_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A2\\.3", glue("Soil.2_3_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A2\\.4", glue("Soil.2_4_{lubridate::ymd(20220607)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^A3\\.1", glue("Soil_3_1_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A3\\.2", glue("Soil_3_2_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A3\\.3", glue("Soil_3_3_{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A3\\.4", glue("Soil_3_4_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A3\\.1", glue("Soil.3_1_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A3\\.2", glue("Soil.3_2_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A3\\.3", glue("Soil.3_3_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A3\\.4", glue("Soil.3_4_{lubridate::ymd(20220607)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^A4\\.1", glue("Soil_4_1{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A4\\.2", glue("Soil_4_2{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A4\\.3", glue("Soil_4_3{lubridate::ymd(20220607)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^A4\\.4", glue("Soil_4_4{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A4\\.1", glue("Soil.4_1_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A4\\.2", glue("Soil.4_2_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A4\\.3", glue("Soil.4_3_{lubridate::ymd(20220607)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^A4\\.4", glue("Soil.4_4_{lubridate::ymd(20220607)}"))) %>%
   # Soil June20
-  mutate(smp =  str_replace_all(smp, "^B1\\.1", glue("Soil_1_1_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B1\\.2", glue("Soil_1_2_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B1\\.3", glue("Soil_1_3_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B1\\.4", glue("Soil_1_4_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B1\\.1", glue("Soil.1_1_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B1\\.2", glue("Soil.1_2_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B1\\.3", glue("Soil.1_3_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B1\\.4", glue("Soil.1_4_{lubridate::ymd(20220620)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^B2\\.1", glue("Soil_2_1_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B2\\.2", glue("Soil_2_2_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B2\\.3", glue("Soil_2_3_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B2\\.4", glue("Soil_2_4_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B2\\.1", glue("Soil.2_1_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B2\\.2", glue("Soil.2_2_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B2\\.3", glue("Soil.2_3_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B2\\.4", glue("Soil.2_4_{lubridate::ymd(20220620)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^B3\\.1", glue("Soil_3_1_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B3\\.2", glue("Soil_3_2_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B3\\.3", glue("Soil_3_3_{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B3\\.4", glue("Soil_3_4_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B3\\.1", glue("Soil.3_1_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B3\\.2", glue("Soil.3_2_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B3\\.3", glue("Soil.3_3_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B3\\.4", glue("Soil.3_4_{lubridate::ymd(20220620)}"))) %>%
   
-  mutate(smp =  str_replace_all(smp, "^B4\\.1", glue("Soil_4_1{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B4\\.2", glue("Soil_4_2{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B4\\.3", glue("Soil_4_3{lubridate::ymd(20220620)}"))) %>%
-  mutate(smp =  str_replace_all(smp, "^B4\\.4", glue("Soil_4_4{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B4\\.1", glue("Soil.4_1_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B4\\.2", glue("Soil.4_2_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B4\\.3", glue("Soil.4_3_{lubridate::ymd(20220620)}"))) %>%
+  mutate(smp =  str_replace_all(smp, "^B4\\.4", glue("Soil.4_4_{lubridate::ymd(20220620)}"))) %>%
   # Hex Nov11
   mutate(smp = str_replace_all(smp, "^H\\.1\\.Nov11_S[:digit:]*", glue("Hex_1_{lubridate::ymd(20221111)}"))) %>%
   mutate(smp = str_replace_all(smp, "^H\\.2\\.Nov11_S[:digit:]*", glue("Hex_2_{lubridate::ymd(20221111)}"))) %>%
@@ -130,13 +129,8 @@ soils_tbm <- as_tibble(melt(as.matrix(soils_tab_thresh)))
 
 soils_tbm <- arrange_taxa(soils_tab_thresh, soils_tbm)
 
-# split_func <- function(x, by) {
-#   r <- diff(range(x))
-#   out <- seq(0, r - by - 1, by = by)
-#   c(round(min(x) + c(0, out - 0.51 + (max(x) - max(out)) / 2), 0), max(x))
-# }
-# idx <- split_func(1:length(all_cols_blind_hex), 10)
-# new_cols <- all_cols_blind_hex[idx]
+soils_tbm_v <- soils_tbm %>% 
+    separate_wider_delim(Var1, delim = "_", names = c("Sample","Replicate", "Date"), cols_remove = FALSE)
 
 library(viridis)
 all_cols_blind <- viridis::viridis.map %>%
@@ -163,12 +157,11 @@ set.seed(5)
 new_cols <- sample(all_cols_blind_hex, num_col)
 new_cols[1] <- "#808080"
 
-soils_tbm %>%
+soils_tbm_v %>%
   ggplot(aes(fill=Var2, y=value, x=Var1)) +
   geom_bar(position="fill", stat="identity") +
   theme(axis.text.x= element_text(angle = 90, hjust = 1)) +
   scale_fill_manual(values = new_cols)
-
  # # remove controls
 # smp_filt = rownames(all_tab)[!rownames(all_tab) == 'C']
 # all_tab_f <- filter_samples_table(smp_filt = smp_filt, table = all_tab)
