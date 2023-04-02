@@ -8,50 +8,60 @@ library(glue)
 
 #---- User Settings ----#
 taxa = "Genus"
-threshold = 2
-
-metadata<-read_q2metadata("meta-data.txt")
-SVs <-read_qza("soil-table.qza")$data
-taxonomy <-read_qza("taxonomy.qza")$data %>% parse_taxonomy()
-taxasums <-summarize_taxa(SVs, taxonomy)$Species
+threshold = 5
+# 
+# metadata<-read_q2metadata("meta-data.txt")
+# SVs <-read_qza("soil-table.qza")$data
+# taxonomy <-read_qza("taxonomy.qza")$data %>% parse_taxonomy()
+# taxasums <-summarize_taxa(SVs, taxonomy)$Species
 
 # Their way
 # taxa_barplot(taxasums, metadata, "soil")
 
 # My way
-source("C:/Users/zjard/Documents/16S_functions.R")
-tbm <- taxa_prop_table()
-
+source("C:/Users/zjard/Desktop/PhD/16S/16S_functions.R")
+all_sums <- taxa_sums(table = "soil-table.qza", taxonomy = "taxonomy.qza")
+tab <- taxa_prop_table(taxasums = all_sums)
+tab_f <- thresh_prop_table(tab, threshold = threshold)
+tbm <- as_tibble(melt(as.matrix(tab_f)))
 #---- For single soils only 
-# choose just 4 soils 
-tbm_f <- tbm %>%
-    filter(Var1 == "A1.1" | Var1 == "A2.3" | Var1 == "A3.3" | Var1 == "A4.2")
-tbm_f <- tbm_f %>%
-    mutate(Var2 = str_to_sentence(Var2))
+# choose just  4 soils 
+tbm_f <- filter_samples_table_melt(smp_filt = c("A1.1", "A2.3", "A3.3", "A4.2"), table_melt = tbm)
+
+# 
+# tbm_f <- tbm %>%
+#     filter(Var1 == "A1.1" | Var1 == "A2.3" | Var1 == "A3.3" | Var1 == "A4.2"
+# tbm_f <- tbm_f %>%
+#     mutate(Var2 = str_to_sentence(Var2))
+
+# tbm_f <- droplevels(tbm_f)
+tbm_f <- arrange_taxa(tab_f, tbm_f)
+
+colours <-lrg_colors(length(unique(tbm_f$Var2)), seed = 30)
 
 # big colourscheme
-n <- 60
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-# col_vector <- col_vector[5:length(col_vector)]
+# n <- 60
+# qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+# col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+# # col_vector <- col_vector[5:length(col_vector)]
+# 
+# # redo this because we subsetted data
+# comb2 <- comb %>%
+#     mutate(soil = rownames(comb)) %>%
+#     filter(soil == "A1.1" | soil == "A2.3" | soil == "A3.3" | soil == "A4.2") %>%
+#     select(-soil)
+# 
+# colnames(comb2) <- str_to_sentence(colnames(comb2))
 
-# redo this because we subsetted data
-comb2 <- comb %>%
-    mutate(soil = rownames(comb)) %>%
-    filter(soil == "A1.1" | soil == "A2.3" | soil == "A3.3" | soil == "A4.2") %>%
-    select(-soil)
-
-colnames(comb2) <- str_to_sentence(colnames(comb2))
-
-tbm_f$Var2 <- factor(tbm_f$Var2, levels = row.names(as.table(sort(colMeans(comb2)))))
-lvls <- levels(tbm_f$Var2)
-lvls <- lvls[lvls != "Other"]
-lvls <- c("Other", lvls)
-tbm_f$Var2 <- factor(tbm_f$Var2, levels = lvls)
-
-# hmmm
-set.seed(1)
-cols <- sample(col_vector, ncol(comb))
+# tbm_f$Var2 <- factor(tbm_f$Var2, levels = row.names(as.table(sort(colMeans(comb2)))))
+# lvls <- levels(tbm_f$Var2)
+# lvls <- lvls[lvls != "Other"]
+# lvls <- c("Other", lvls)
+# tbm_f$Var2 <- factor(tbm_f$Var2, levels = lvls)
+# 
+# # hmmm
+# set.seed(1)
+# cols <- sample(col_vector, ncol(comb))
 
 # change their labels
 tbm_f %>%
@@ -67,9 +77,9 @@ tbm_f %>%
     xlab("Soil") + ylab("Abundance (%)") + labs(fill=taxa) +
     # theme_solarized_2() + 
     # theme(axis.text.x= element_text(angle = 90, hjust = 1)) +
-    ggtitle(glue('16S Soil, Threshold: {threshold}%, Number of taxa in Other: {tracker}')) +
+    ggtitle(glue('16S Soil, Threshold: {threshold}%')) +
     # scale_fill_brewer(palette = "Paired") +
-    scale_fill_manual(values = cols) +
+    scale_fill_manual(values = colours) +
     # scale_fill_viridis_d() +
     theme(axis.text.x = element_text(size = 14)) +
     theme_q2r() + 
@@ -247,4 +257,5 @@ uwunifrac$data$Vectors %>%
     theme(plot.title = element_text(size = 15)) + 
     theme(legend.text = element_text(size = 10)) + 
     theme(legend.title = element_text(size = 12))
+
 

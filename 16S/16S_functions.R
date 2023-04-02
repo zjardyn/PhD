@@ -153,5 +153,6 @@ lrg_colors <- function(smp, seed) {
   col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
   set.seed(seed)
   cols <- sample(col_vector, smp)
+  cols[1] <- "#808080"
   cols
 }
