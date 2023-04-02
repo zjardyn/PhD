@@ -201,7 +201,7 @@ enrich_hex <- enrich_hex %>%
 hex_colours <-lrg_colors(length(unique(enrich_hex$Var2)), seed = 30)
 
 size2 <- -5
-
+# why wont this push 
 enrich_hex %>%
   ggplot(aes(fill=Var2, y=value, x=Datename)) + 
   geom_bar(position="fill", stat="identity") + 
